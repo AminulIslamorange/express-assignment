@@ -1,4 +1,5 @@
 import express, { type Application, type Request, type Response } from 'express';
+import { userRouter } from './module/user/user.route';
 
 const app:Application = express()
 const port = 5000;
@@ -15,6 +16,8 @@ app.get('/', (req:Request, res:Response) => {
     message:'Express server running'
   })
 })
+
+app.use("/api/auth", userRouter);
 
 
 
