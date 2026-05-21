@@ -112,8 +112,51 @@ const getSingleIssueFromDB = async (id: string) => {
     } : null,
   };
 };
+const updateIssueInDB = async (id: string, updateData: any, currentUser: any) => {
+  // ১. প্রথমে ডাটাবেজ থেকে ইস্যুটি খুঁজে বের করি
+  const issueResult = await pool.query(`SELECT * FROM issues WHERE id = $1`, [id]);
+  const issue = issueResult.rows[0];
+
+  if (!issue) {
+    const error: any = new Error("Issue not found!");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // ২. অ্যাক্সেস কন্ট্রোল লজিক চেক
+  if (currentUser.role === "contributor") {
+    // নিজের ইস্যু কি না চেক
+    if (issue.reporter_id !== currentUser.id) {
+      const error: any = new Error("You can only update your own issues!");
+      error.statusCode = 403;
+      throw error;
+    }
+    // স্ট্যাটাস open আছে কি না চেক
+    if (issue.status !== "open") {
+      const error: any = new Error("You can only update issues when the status is open!");
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+
+  // ৩. ডাইনামিক আপডেট কুয়েরি তৈরি (Title, Description, Type)
+  const { title, description, type } = updateData;
+  const finalTitle = title !== undefined ? title : issue.title;
+  const finalDescription = description !== undefined ? description : issue.description;
+  const finalType = type !== undefined ? type : issue.type;
+
+  const updatedResult = await pool.query(
+    `UPDATE issues 
+     SET title = $1, description = $2, type = $3, updated_at = NOW() 
+     WHERE id = $4 
+     RETURNING id, title, description, type, status, reporter_id, created_at, updated_at`,
+    [finalTitle, finalDescription, finalType, id]
+  );
+
+  return updatedResult.rows[0];
+};
 
 export const issueService = {
   createIssueIntoDB,
-  getAllIssuesFromDB,getSingleIssueFromDB
+  getAllIssuesFromDB,getSingleIssueFromDB,updateIssueInDB
 };

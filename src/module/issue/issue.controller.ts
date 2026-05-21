@@ -55,7 +55,23 @@ const getSingleIssue = async (req: Request, res: Response, next: NextFunction): 
     next(error);
   }
 };
+const updateIssue = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const currentUser = req.user; // টোকেন থেকে পাওয়া id এবং role আছে এখানে
+
+    const result = await issueService.updateIssueInDB(id as string, req.body, currentUser);
+
+    res.status(200).json({
+      success: true,
+      message: "Issue updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const issueController = {
-  createIssue,getAllIssues,getSingleIssue
+  createIssue,getAllIssues,getSingleIssue,updateIssue
 };
