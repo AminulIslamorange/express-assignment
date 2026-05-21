@@ -34,7 +34,28 @@ const getAllIssues = async (req: Request, res: Response, next: NextFunction): Pr
     next(error);
   }
 };
+const getSingleIssue = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const result = await issueService.getSingleIssueFromDB(id as string);
+
+    if (!result) {
+      res.status(404).json({
+        success: false,
+        message: "Issue not found!",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const issueController = {
-  createIssue,getAllIssues,
+  createIssue,getAllIssues,getSingleIssue
 };
