@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { issueService } from "./issue.service";
+import type { ICurrentUser } from "./issue.interface";
 
 const createIssue = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -60,7 +61,7 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction): Pro
     const { id } = req.params;
     const currentUser = req.user; // টোকেন থেকে পাওয়া id এবং role আছে এখানে
 
-    const result = await issueService.updateIssueInDB(id as string, req.body, currentUser);
+    const result = await issueService.updateIssueInDB(id as string, req.body, currentUser as ICurrentUser);
 
     res.status(200).json({
       success: true,
