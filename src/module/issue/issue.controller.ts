@@ -72,6 +72,20 @@ const updateIssue = async (req: Request, res: Response, next: NextFunction): Pro
   }
 };
 
+const deleteIssue = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+    await issueService.deleteIssueFromDB(id as string);
+
+    res.status(200).json({
+      success: true,
+      message: "Issue deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const issueController = {
-  createIssue,getAllIssues,getSingleIssue,updateIssue
+  createIssue,getAllIssues,getSingleIssue,updateIssue,deleteIssue
 };
