@@ -2,8 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 
-
-// ১. ইউজার রেজিস্ট্রেশন (Signup)
 const signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const result = await userService.registerUserIntoDB(req.body);

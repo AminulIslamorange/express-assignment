@@ -42,6 +42,7 @@ export interface IUpdateIssueInput {
   title?: string;
   description?: string;
   type?: "bug" | "feature_request";
+  status?: string;
 }
 
 export interface ICurrentUser {
