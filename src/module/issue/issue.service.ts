@@ -26,7 +26,7 @@ const getAllIssuesFromDB = async (query: IGetAllIssuesQuery) => {
       `SELECT id, title, description, type, status, reporter_id, created_at, updated_at FROM issues WHERE type = $1 AND status = $2 ${orderSQL}`,
       [type, status]
     );
-    return formatIssuesWithReporters(result.rows);
+    return await formatIssuesWithReporters(result.rows);
   } 
   
   if (type) {
@@ -34,7 +34,7 @@ const getAllIssuesFromDB = async (query: IGetAllIssuesQuery) => {
       `SELECT id, title, description, type, status, reporter_id, created_at, updated_at FROM issues WHERE type = $1 ${orderSQL}`,
       [type]
     );
-    return formatIssuesWithReporters(result.rows);
+    return await formatIssuesWithReporters(result.rows);
   } 
   
   if (status) {
@@ -42,13 +42,13 @@ const getAllIssuesFromDB = async (query: IGetAllIssuesQuery) => {
       `SELECT id, title, description, type, status, reporter_id, created_at, updated_at FROM issues WHERE status = $1 ${orderSQL}`,
       [status]
     );
-    return formatIssuesWithReporters(result.rows);
+    return await formatIssuesWithReporters(result.rows);
   }
 
   const result = await pool.query(
     `SELECT id, title, description, type, status, reporter_id, created_at, updated_at FROM issues ${orderSQL}`
   );
-  return formatIssuesWithReporters(result.rows);
+  return await formatIssuesWithReporters(result.rows);
 };
 
 
@@ -126,6 +126,8 @@ const updateIssueInDB = async (id: string, updateData: IUpdateIssueInput, curren
 
  
   const { title, description, type, status } = updateData as IUpdateIssueInput;
+  // I have brought simple chenge for avoid err just I added this line.gemini suggest me this line......
+  const dbStatus = status !== undefined ? status : null;
 
   const updatedResult = await pool.query(
     `UPDATE issues SET 
@@ -136,7 +138,8 @@ const updateIssueInDB = async (id: string, updateData: IUpdateIssueInput, curren
        updated_at = NOW() 
      WHERE id = $5 
      RETURNING id, title, description, type, status, reporter_id, created_at, updated_at`,
-    [title, description, type, status, id]
+    //[title, description, type, status,dbStatus, id]
+    [title, description, type,dbStatus, id]
   );
 
   return updatedResult.rows[0];

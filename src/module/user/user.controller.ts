@@ -2,7 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 
-const signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.registerUserIntoDB(req.body);
 
@@ -19,7 +20,7 @@ const signup = async (req: Request, res: Response, next: NextFunction): Promise<
 };
 
 
-const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.loginUser(req.body);
 
