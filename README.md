@@ -3,7 +3,7 @@
 
 DEVLENS is a collaborative platform designed for software teams to report bugs, suggest features, and coordinate resolutions efficiently.
 
-🔗 **Live URL:** [https://devpulse-api.vercel.app]
+🔗 **Live URL:** [https://devlens-cyan.vercel.app/]
 
 
 🎥 **Interview Video:** [Google Drive]

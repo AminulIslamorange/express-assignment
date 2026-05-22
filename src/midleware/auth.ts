@@ -37,7 +37,7 @@ const auth = (...roles: Roles[]) => {
       if (roles.length && !roles.includes(user.role)) {
         res.status(403).json({
           success: false,
-          message: "Forbidden!!",
+          message: "Forbidden Access!!",
         });
         return;
       }
